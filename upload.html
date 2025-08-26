@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>일반 파일 업로드</h3>
+    <form
+      action="http://localhost:3000/fileupload"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="filename" id="filename" />
+      <input type="submit" value="업로드" />
+    </form>
+    <hr />
+    <h3>이미지 파일 업로드</h3>
+    <form
+      action="http://localhost:3000/imgupload"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="image" id="image" />
+      <input type="submit" value="업로드" />
+    </form>
+  </body>
+</html>

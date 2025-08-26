@@ -6,7 +6,8 @@
 // express 서버 실행(3000 port) --- live 서버 (5500 port)
 
 const express = require("express");
-
+const productRouter = require("./routes/product");
+const salesRouter = require("./routes/sales");
 const app = express(); // express 인스턴스 생성 / app은 웹 서버 객체
 
 // url - 실행함수 => 라우팅
@@ -29,6 +30,19 @@ app.post("/main", (req, resp) => {
 
 // 서버 스타트
 // listen(포트번호, 콜백 함수)
+
 app.listen(3000, () => {
   console.log("http://localhost:3000 서버실행");
 });
+app
+  .route("/customer")
+  .get((req, resp) => {
+    resp.send("고객정보 조회");
+  })
+  .post((req, resp) => {
+    resp.send("고객정보 등록");
+  });
+
+// product, sales 라우팅정보 활용
+app.use("/product", productRouter);
+app.use("/sales", salesRouter);

@@ -5,6 +5,8 @@ const app = express(); // express 인스턴스
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
+const cors = require("cors");
+
 app.use(bodyParser.urlencoded()); // id=01 & pw=1111 <- 키, 벨류
 app.use(bodyParser.json()); // JSON 파서
 
@@ -50,6 +52,11 @@ const imgUpload = multer({
   },
 });
 
+const corsOpt = {
+  origin: "http://localhost:5500",
+};
+app.use(cors(corsOpt));
+
 app.get("/", (req, resp) => {
   resp.send("/ 요청");
 });
@@ -66,6 +73,16 @@ app.post("/fileupload", uploads.single("filename"), (req, resp) => {
 app.post("/imgupload", imgUpload.single("image"), (req, resp) => {
   resp.send("이미지 업로드 성공");
 });
+
+// json 결과 반환
+app.get("/bookList", (req, resp) => {
+  const list = [
+    { no: 1, title: "이것이자바다" },
+    { no: 2, title: "웹기초" },
+  ];
+  resp.json(list);
+});
+
 // 에러처리
 app.use((err, req, resp) => {
   if (err instanceof multer.MulterError) {
@@ -75,6 +92,6 @@ app.use((err, req, resp) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(3000, "0.0.0.0", () => {
   console.log("http://localhost:3000 으로 서버 실행");
 });

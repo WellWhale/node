@@ -25,5 +25,15 @@
       <input type="file" name="image" id="image" />
       <input type="submit" value="업로드" />
     </form>
+
+    <script>
+      // http://localhost:5500/upload.html << 경로
+      fetch("http://192.168.0.23:3000/bookList")
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => console.log(err));
+    </script>
   </body>
 </html>

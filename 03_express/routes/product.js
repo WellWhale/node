@@ -11,7 +11,7 @@ router.get("/list", (req, resp) => {
   resp.send("/ 상품의 list 경로");
 });
 router.post("/insert", (req, resp) => {
-  cnosole.log("/insert 경로");
+  console.log("/insert 경로");
   resp.send("/ 상품의 insert 경로");
 });
 

@@ -7,7 +7,7 @@ router.get("/", (req, resp) => {
   resp.send("/ 판매의 root 경로");
 });
 router.post("/insert", (req, resp) => {
-  cnosole.log("/insert 경로");
+  console.log("/insert 경로");
   resp.send("/ 판매의 insert 경로");
 });
 

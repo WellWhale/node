@@ -82,40 +82,47 @@ app.get("/excel_down", async (req, resp) => {
 
 // 엑셀을 이메일로 보내는거
 app.get("/excel_email", async (req, resp) => {
-  const workbook = xlsx.utils.book_new();
-  const customers = await sql.query("customerList");
+  try {
+    const workbook = xlsx.utils.book_new();
+    const customers = await sql.execute("select * from customers");
 
-  const firstSheet = xlsx.utils.json_to_sheet(customers, {
-    header: ["id", "name", "email", "phone", "address"],
-  });
+    const firstSheet = xlsx.utils.json_to_sheet(customers, {
+      header: ["id", "name", "email", "phone", "address"],
+    });
 
-  firstSheet["!cols"] = [
-    { wpx: 50 },
-    { wpx: 200 },
-    { wpx: 200 },
-    { wpx: 140 },
-    { wpx: 200 },
-  ];
+    firstSheet["!cols"] = [
+      { wpx: 50 },
+      { wpx: 200 },
+      { wpx: 200 },
+      { wpx: 140 },
+      { wpx: 200 },
+    ];
 
-  xlsx.utils.book_append_sheet(workbook, firstSheet, "Customers");
+    xlsx.utils.book_append_sheet(workbook, firstSheet, "Customers");
 
-  const data = {
-    from: "oms9623@hanmail.net",
-    to: "noz1213@naver.com",
-    subject: "제목 테스트 100",
-    text: "테스트 내용 100",
-    attachments: [
-      {
-        filename: "Customers.xlsx",
-        content: Buffer.from(
-          xlsx.write(workbook, { type: "buffer" }),
-          "base64"
-        ),
-      },
-    ],
-  };
+    const data = {
+      from: "oms9623@hanmail.net",
+      to: "noz1213@naver.com",
+      subject: "제목 테스트 100",
+      text: "테스트 내용 100",
+      attachments: [
+        {
+          filename: "Customers.xlsx",
+          content: Buffer.from(
+            xlsx.write(workbook, { type: "buffer" }),
+            "base64"
+          ),
+        },
+      ],
+    };
 
-  await nodemail.send(data);
+    await nodemail.mailSend(data);
+
+    return resp.send("완료");
+  } catch (err) {
+    console.log(err);
+    return resp.send("실패");
+  }
 });
 
 app.listen(3000, () => {

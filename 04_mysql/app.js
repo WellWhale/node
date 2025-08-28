@@ -4,6 +4,11 @@ const express = require("express");
 const parser = require("body-parser");
 // sql폴더 안에있는 파일을 임포트(파일 안에 있는 exports 사용 가능)
 const sql = require("./sql");
+// sql폴더 안에있는 sql.js를 임포트
+const prodSql = require("./sql/sql");
+
+// sql.js에 productList 쿼리문을 콘솔출력
+// console.log(prodSql["productList"].query);
 
 // 위에서 임포트 한 express를 사용하겠다
 const app = express();
@@ -15,6 +20,19 @@ app.use(parser.json());
 // 홈페이지 첫 화면(서버 살아있는지 확인용)
 app.get("/", (req, resp) => {
   resp.send("/ 실행");
+});
+
+// sql.js를 이용한 상품쿼리
+app.post("/api/:alias", async (req, resp) => {
+  let search = prodSql[req.params.alias].query;
+  let param = req.body.param;
+  try {
+    let result = await sql.execute(search, param);
+    resp.json(result);
+  } catch (err) {
+    console.log(err);
+    resp.json({ retCode: "Error" });
+  }
 });
 
 // 고객에 목록 API

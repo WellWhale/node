@@ -7,6 +7,8 @@ const sql = require("./sql");
 // sql폴더 안에있는 sql.js를 임포트
 const prodSql = require("./sql/sql");
 
+const cors = require("cors");
+
 // sql.js에 productList 쿼리문을 콘솔출력
 // console.log(prodSql["productList"].query);
 
@@ -16,6 +18,8 @@ const app = express();
 app.use(parser.urlencoded());
 // json문자열을 json객체로 만들어주겠다
 app.use(parser.json());
+
+app.use(cors());
 
 // 홈페이지 첫 화면(서버 살아있는지 확인용)
 app.get("/", (req, resp) => {

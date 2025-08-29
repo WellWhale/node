@@ -18,10 +18,8 @@ function execute(sql = "select * from customers", param = []) {
       if (err) {
         return reject(err);
       }
-      // 아래에 insert나 delete 넣어도 될듯
       connection.query(sql, param, (queryErr, results) => {
         // 여기까지 왔으면 연결선으로 sql과 연결성공
-        // sql >> customers라는 테이블에 있는 데이터 꺼내와라
         connection.release();
         // release << 썻던 연결선 반납
         if (queryErr) {

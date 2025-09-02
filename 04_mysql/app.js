@@ -7,6 +7,8 @@ const sql = require("./sql");
 // sql폴더 안에있는 sql.js를 임포트
 const prodSql = require("./sql/sql");
 
+const fs = require("fs");
+
 const cors = require("cors");
 
 // sql.js에 productList 쿼리문을 콘솔출력
@@ -17,13 +19,46 @@ const app = express();
 // 우리서버는 이 번역기를 계속 쓰겠다.. 정도..
 app.use(parser.urlencoded());
 // json문자열을 json객체로 만들어주겠다
-app.use(parser.json());
+app.use(
+  parser.json({
+    limit: "10mb",
+  })
+);
 
 app.use(cors());
 
 // 홈페이지 첫 화면(서버 살아있는지 확인용)
 app.get("/", (req, resp) => {
   resp.send("/ 실행");
+});
+
+// 이미지 넣는거
+app.get("/download/:product_id/:path", (req, resp) => {
+  let product_id = req.params.product_id;
+  let path = req.params.path;
+  resp.header("Content-Type", `image/${path.substring(path.lastIndexOf("."))}`);
+  const filepath = `${__dirname}/uploads/${product_id}/${path}`;
+  if (!fs.existsSync(filepath)) {
+    resp.send("no image");
+    return;
+  }
+  fs.createReadStream(filepath).pipe(resp);
+});
+
+// 테스트
+app.post("/upload/:file_name", (req, resp) => {
+  let file_name = req.params.file_name;
+  let data = req.body.param;
+  // console.log(req.body.param);
+  // console.log(file_name);
+
+  fs.writeFile(__dirname + "/uploads/" + file_name, data, "base64", (err) => {
+    if (err) {
+      resp.send(err);
+      return;
+    }
+    resp.send("OK");
+  });
 });
 
 // sql.js를 이용한 상품쿼리
